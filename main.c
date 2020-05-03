@@ -89,9 +89,8 @@ int main(int argc, char *argv[]) {
         output = fopen(argv[2], "w");
         //Checks if input file exists:
         if (!input) {
-            printf("INPUT FILE DOES NOT EXIST!");
-            system("pause");
-            system("exit");
+            printf("INPUT FILE DOES NOT EXIST!\n");
+            exit(0);
         }
         //sets the length of the input and output variables to file input size
         fseek(input, 0, SEEK_END);
@@ -103,7 +102,7 @@ int main(int argc, char *argv[]) {
         int count = 0; //used to collect file characters
         int flag = -1; //to keep track of file format area
         int ab = 1; //flag to tell if B exists
-        //reads from file input
+        //reads from file input, cycles through everything to find <operation>,<key>,&<content>
         while (!feof(input)) {
             c = fgetc(input);
             if (flag > 0) {
@@ -140,15 +139,33 @@ int main(int argc, char *argv[]) {
         char outputMsg[fileLength + A];
         //calls the user selected function
         switch (operation) {
-            case 1: ;
+            case 1:
+                //check validity of a
+                if (A < 2) {
+                    system("cls");
+                    printf("Invalid arguement(s). Try again...\n");
+                    exit(0);
+                }
                 //inputMsg is the message to be encrypted to cipherText, outputMsg
                 railFence(&inputMsg, &outputMsg, strlen(inputMsg), A);
                 break;
-            case 2: ;
+            case 2:
+                //check validity of a and b
+                if (B < 2 || A <= B) {
+                    system("cls");
+                    printf("Invalid arguement(s). Try again...\n");
+                    exit(0);
+                }
                 //inputMsg is the message to be encrypted to cipherText, outputMsg
                 railFence2(&inputMsg, &outputMsg, strlen(inputMsg), A, B, 0);
                 break;
-            case 3: ;
+            case 3:
+                //check validity of a and b
+                if (B < 2 || A <= B) {
+                    system("cls");
+                    printf("Invalid arguement(s). Try again...\n");
+                    exit(0);
+                }
                 //inputMsg is the message to be encrypted to cipherText, outputMsg
                 railFence2(&outputMsg, &inputMsg, strlen(inputMsg), A, B, 1);
                 break;
@@ -209,14 +226,14 @@ int main(int argc, char *argv[]) {
                             case 2:
                                 //Gets the value of A
                                 system("cls");
-                                printf("Value of A (A > 1 and A < input-length): ");
+                                printf("Value of A (A > 1): ");
                                 scanf("%d", &A);
                                 menu(2, &input, A, B);
                                 break;
                             case 9:
                                 //Attempts to run the cipher if
                                 //  all arguments have been provided
-                                if (A > 1 && strlen(input) > 0 && A < strlen(input)) {
+                                if (A > 1 && strlen(input) > 0) {
                                     //Declares output since it now has the potential needed buffer length (A):
                                     char output[8192 + A];
                                     //Calls function to encrypt input into output
@@ -229,6 +246,8 @@ int main(int argc, char *argv[]) {
                                     //Pause, then return to main menu
                                     system("pause");
                                     menu(1, &input, A, B);
+                                    //Allows loop to exit to main menu
+                                    userInput2 = 0;
                                 } else {
                                     printf(">> Invalid arguement(s). Try again...\n>");
                                 }
@@ -236,7 +255,7 @@ int main(int argc, char *argv[]) {
                             default:
                                 printf(">> Invalid input. Try again...\n>");
                         }
-                    } while (userInput2 != 0 && userInput2 != 9);
+                    } while (userInput2 != 0);
                     break;
                 case 2:
                     //2-LEVEL RAIL-FENCE ENCRYPTION
@@ -260,7 +279,7 @@ int main(int argc, char *argv[]) {
                             case 2:
                                 //Gets the value of A
                                 system("cls");
-                                printf("Value of A (A > 2 and A < input-length): ");
+                                printf("Value of A (A > 2): ");
                                 scanf("%d", &A);
                                 menu(3, &input, A, B);
                                 break;
@@ -274,7 +293,7 @@ int main(int argc, char *argv[]) {
                             case 9:
                                 //Attempts to run the cipher if
                                 //  all arguments have been provided
-                                if (A > B && B > 1 && strlen(input) > 0 && A < strlen(input)) {
+                                if (A > B && B > 1 && strlen(input) > 0) {
                                     //Declares output since it now has the potential needed buffer length (A):
                                     char output[8192 + A];
                                     //Calls function to encrypt input into output
@@ -288,6 +307,8 @@ int main(int argc, char *argv[]) {
                                     //Pause, then return to main menu
                                     system("pause");
                                     menu(1, &input, A, B);
+                                    //Allows loop to exit to main menu
+                                    userInput2 = 0;
                                 } else {
                                     printf(">> Invalid arguement(s). Try again...\n>");
                                 }
@@ -295,7 +316,7 @@ int main(int argc, char *argv[]) {
                             default:
                                 printf(">> Invalid input. Try again...\n>");
                         }
-                    } while (userInput2 != 0 && userInput2 != 9);
+                    } while (userInput2 != 0);
                     break;
                 case 3:
                     //2-LEVEL RAIL-FENCE DECRYPTION
@@ -319,7 +340,7 @@ int main(int argc, char *argv[]) {
                             case 2:
                                 //Gets the value of A
                                 system("cls");
-                                printf("Value of A (A > 2 and A < input-length): ");
+                                printf("Value of A (A > 2): ");
                                 scanf("%d", &A);
                                 menu(4, &input, A, B);
                                 break;
@@ -333,7 +354,7 @@ int main(int argc, char *argv[]) {
                             case 9:
                                 //Attempts to run the cipher if
                                 //  all arguments have been provided
-                                if (A > B && B > 1 && strlen(input) > 0 && A < strlen(input)) {
+                                if (A > B && B > 1 && strlen(input) > 0) {
                                     //Declares output since we now know it's needed length:
                                     char output[8192];
                                     //Calls function to decrypt input into output
@@ -347,6 +368,8 @@ int main(int argc, char *argv[]) {
                                     //Pause, then return to main menu
                                     system("pause");
                                     menu(1, &input, A, B);
+                                    //Allows loop to exit to main menu
+                                    userInput2 = 0;
                                 } else {
                                     printf(">> Invalid arguement(s). Try again...\n>");
                                 }
@@ -354,7 +377,7 @@ int main(int argc, char *argv[]) {
                             default:
                                 printf(">> Invalid input. Try again...\n>");
                         }
-                    } while (userInput2 != 0 && userInput2 != 9);
+                    } while (userInput2 != 0);
                     break;
                 case 4:
                     //SUSBTITUTION DECRYPTION
@@ -395,6 +418,8 @@ int main(int argc, char *argv[]) {
                                     //Pause, then return to main menu
                                     system("pause");
                                     menu(1, &input, A, B);
+                                    //Allows loop to exit to main menu
+                                    userInput2 = 0;
                                 } else {
                                     printf(">> Invalid arguement(s). Try again...\n>");
                                 }
@@ -402,7 +427,7 @@ int main(int argc, char *argv[]) {
                             default:
                                 printf(">> Invalid input. Try again...\n>");
                         }
-                    } while (userInput2 != 0 && userInput2 != 9);
+                    } while (userInput2 != 0);
                     break;
                 default:
                     printf(">> Invalid input. Try again...\n>");
@@ -648,6 +673,8 @@ When decrypting, [cipherText] is decrypted and stored in [message], [length] is 
     the message "bounces" from the bottom up in the middle of two "crests", and [dir]
     dictates whether this function decrypts or encrypts.
 
+... like, i could shave off five lines here by combining the array initialisation but ...
+
 ------------------------------------------------------------------------------------------
 DETAILS:
 int     {message}       unencrypted message
@@ -800,7 +827,7 @@ The way that this decryption works in general is as follows:
     - Boom. Key I guess.
 
 
-... this whole thing is a clusterfuck ... i have no clue how i thought of this ...
+... this whole idea is a clusterfuck ... i have no clue how i thought of this ...
 
 ------------------------------------------------------------------------------------------
 DETAILS:
@@ -835,11 +862,11 @@ void substitution(char *message, char *cipherText, char *key) {
     FILE *wordlist;
     wordlist = fopen("wordlist.txt", "r");
     //Checks if wordlist exists:
-    system("cls");
     if (!wordlist) {
-        printf("MISSING WORDLIST.TXT FILE IN CURRENT DIRECTORY!");
+        system("cls");
+        printf("MISSING WORDLIST.TXT FILE IN CURRENT DIRECTORY!\n\n");
         system("pause");
-        system("exit");
+        exit(0);
     }
     //loop through all words in cipherText
     char word[50]; //holds words
@@ -978,7 +1005,6 @@ void substitution(char *message, char *cipherText, char *key) {
     for (int i = 0; i < strlen(cipherText); i++) {
         message[i] = '~';
     }
-    char *e; //to help search *alphabet
     for (int i = 0; i < strlen(cipherText); i++) {
         for (int j = 0; j < 26; j++) {
             //substitutes:
