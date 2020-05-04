@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
     } else if (argc == 1) {
         ///USER INTERFACE (NO FILES)
         //variables that menu will use
-        char input[8192];//, output[8192]; -> Declare output[] after A has been fetched
+        char input[8193];//, output[8193]; -> Declare output[] after A has been fetched
         int A = 0, B = 0, userInput, userInput2;
         //Loops to make sure the user stays in the program until they want to exit
         menu(1, &input, A, B);
@@ -585,7 +585,7 @@ void fetchUserMessage(char *userInput) {
     int count = 0;
     //Loops until ~ and enter has been pressed
     c = fgetc(stdin);
-    while (c != '~' && count < 8192) {
+    while (c != '~' && count < 8193) {
         c = fgetc(stdin);
         userInput[count++] = c;
     }
